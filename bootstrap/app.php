@@ -11,9 +11,25 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
+
+        $middleware->redirectGuestsTo(function ($request) {
+            if ($request->is('api/*')) {
+                return null;
+            }
+            return route('login');
+        });
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Silakan login terlebih dahulu'
+                ], 401);
+            }
+        });
     })->create();
