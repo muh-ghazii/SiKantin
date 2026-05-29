@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\DashboardController;
 
 // ===== AUTH (public) =====
 Route::post('/register', [AuthController::class, 'register']);
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Khusus Admin
     Route::middleware('admin')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index']);
         Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 
         Route::post('/categories', [CategoryController::class, 'store']);
