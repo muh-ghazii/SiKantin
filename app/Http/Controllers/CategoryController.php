@@ -26,11 +26,7 @@ class CategoryController extends Controller
 
         $category = Category::create($request->all());
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Kategori berhasil ditambahkan',
-            'data'    => $category
-        ], 201);
+        return redirect('/categories')->with('success', 'Kategori berhasil ditambahkan!');
     }
 
     // GET /categories/{id}
@@ -57,10 +53,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Kategori tidak ditemukan'
-            ], 404);
+            return redirect('/categories')->with('error', 'Kategori tidak ditemukan');
         }
 
         $request->validate([
@@ -69,11 +62,7 @@ class CategoryController extends Controller
 
         $category->update($request->all());
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Kategori berhasil diupdate',
-            'data'    => $category
-        ]);
+        return redirect('/categories')->with('success', 'Kategori berhasil diupdate!');
     }
 
     // DELETE /categories/{id}
@@ -82,17 +71,11 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Kategori tidak ditemukan'
-            ], 404);
+            return redirect('/categories')->with('error', 'Kategori tidak ditemukan');
         }
 
         $category->delete();
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Kategori berhasil dihapus'
-        ]);
+        return redirect('/categories')->with('success', 'Kategori berhasil dihapus!');
     }
 }

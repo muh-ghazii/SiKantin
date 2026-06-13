@@ -74,8 +74,8 @@
                                 <tr>
                                     <td>{{ $item->menu->nama_menu ?? 'Item Dihapus' }}</td>
                                     <td class="text-center">{{ $item->jumlah }}</td>
-                                    <td class="text-end">Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                                    <td class="text-end">Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
+                                    <td class="text-end">Rp {{ number_format($item->menu->harga, 0, ',', '.') }}</td>
+                                    <td class="text-end">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
                                 </tr>
                                 @endforeach
                             @else
