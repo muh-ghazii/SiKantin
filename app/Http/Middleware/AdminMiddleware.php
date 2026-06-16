@@ -11,17 +11,11 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (!Auth::check()) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Silakan login terlebih dahulu'
-            ], 401);
+            return redirect('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
         if (Auth::user()->role !== 'admin') {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Akses ditolak, hanya untuk admin'
-            ], 403);
+            return redirect('/home')->with('error', 'Akses ditolak, fitur ini hanya untuk Admin');
         }
 
         return $next($request);

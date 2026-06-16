@@ -75,60 +75,78 @@ Route::get('/dashboard', function () {
     $menu_terlaris   = \App\Models\Menu::take(5)->get();
 
     return view('dashboard.index', compact('stats', 'pesanan_terbaru', 'menu_terlaris'));
+})->middleware(['auth', 'admin']);
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/categories', function () {
+        $categories = \App\Models\Category::withCount('menus')->get();
+        return view('category.index', compact('categories'));
+    });
+    Route::get('/categories/create', function () {
+        return view('category.create');
+    });
+    Route::get('/categories/{id}/edit', function ($id) {
+        $category = \App\Models\Category::findOrFail($id);
+        return view('category.edit', compact('category'));
+    });
+
+    Route::get('/menus', function () {
+        $menus      = \App\Models\Menu::with('category')->get();
+        $categories = \App\Models\Category::all();
+        return view('menu.index', compact('menus', 'categories'));
+    });
+    Route::get('/menus/create', function () {
+        $categories = \App\Models\Category::all();
+        return view('menu.create', compact('categories'));
+    });
+    Route::get('/menus/{id}/edit', function ($id) {
+        $menu       = \App\Models\Menu::findOrFail($id);
+        $categories = \App\Models\Category::all();
+        return view('menu.edit', compact('menu', 'categories'));
+    });
+
+    Route::get('/orders', function () {
+        $orders = \App\Models\Order::with('user')->withCount('orderItems')->latest()->get();
+        return view('orders.index', compact('orders'));
+    });
+
+    // CRUD Categories
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{id}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+    // CRUD Menus
+    Route::post('/menus', [MenuController::class, 'store']);
+    Route::put('/menus/{id}', [MenuController::class, 'update']);
+    Route::delete('/menus/{id}', [MenuController::class, 'destroy']);
+
+    // Update Order Status
+    Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 });
 
-Route::get('/categories', function () {
-    $categories = \App\Models\Category::withCount('menus')->get();
-    return view('category.index', compact('categories'));
-});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/orders/create', function () {
+        $menus = \App\Models\Menu::where('stok', '>', 0)->get();
+        return view('orders.create', compact('menus'));
+    });
 
-Route::get('/categories/create', function () {
-    return view('category.create');
-});
+    Route::get('/orders/history', function () {
+        $orders = \App\Models\Order::where('user_id', auth()->id())
+                    ->with('orderItems.menu')
+                    ->latest()
+                    ->get();
+        return view('orders.history', compact('orders'));
+    });
 
-Route::get('/categories/{id}/edit', function ($id) {
-    $category = \App\Models\Category::findOrFail($id);
-    return view('category.edit', compact('category'));
-});
+    Route::get('/orders/{id}', function ($id) {
+        $order = \App\Models\Order::with(['user', 'orderItems.menu'])->findOrFail($id);
+        if (auth()->user()->role !== 'admin' && auth()->id() !== $order->user_id) {
+            return redirect('/home')->with('error', 'Akses ditolak');
+        }
+        return view('orders.show', compact('order'));
+    });
 
-Route::get('/menus', function () {
-    $menus      = \App\Models\Menu::with('category')->get();
-    $categories = \App\Models\Category::all();
-    return view('menu.index', compact('menus', 'categories'));
-});
-
-Route::get('/menus/create', function () {
-    $categories = \App\Models\Category::all();
-    return view('menu.create', compact('categories'));
-});
-
-Route::get('/menus/{id}/edit', function ($id) {
-    $menu       = \App\Models\Menu::findOrFail($id);
-    $categories = \App\Models\Category::all();
-    return view('menu.edit', compact('menu', 'categories'));
-});
-
-Route::get('/orders', function () {
-    $orders = \App\Models\Order::with('user')->withCount('orderItems')->latest()->get();
-    return view('orders.index', compact('orders'));
-});
-
-Route::get('/orders/create', function () {
-    $menus = \App\Models\Menu::where('stok', '>', 0)->get();
-    return view('orders.create', compact('menus'));
-});
-
-Route::get('/orders/history', function () {
-    $orders = \App\Models\Order::where('user_id', auth()->id())
-                ->with('orderItems.menu')
-                ->latest()
-                ->get();
-    return view('orders.history', compact('orders'));
-});
-
-Route::get('/orders/{id}', function ($id) {
-    $order = \App\Models\Order::with(['user', 'orderItems.menu'])->findOrFail($id);
-    return view('orders.show', compact('order'));
+    Route::post('/orders', [OrderController::class, 'store']);
 });
 
 Route::get('/home', function () {
@@ -180,22 +198,4 @@ Route::post('/cart/remove', function (Request $request) {
 Route::post('/cart/clear', function () {
     session()->forget('cart');
     return redirect('/home');
-});
-
-// ── FORM PROCESSING (POST/PUT/DELETE) ─────────────────────────
-Route::middleware('auth')->group(function () {
-
-    // Orders
-    Route::post('/orders', [OrderController::class, 'store']);
-    Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus']);
-
-    // Categories
-    Route::post('/categories', [CategoryController::class, 'store']);
-    Route::put('/categories/{id}', [CategoryController::class, 'update']);
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
-
-    // Menus
-    Route::post('/menus', [MenuController::class, 'store']);
-    Route::put('/menus/{id}', [MenuController::class, 'update']);
-    Route::delete('/menus/{id}', [MenuController::class, 'destroy']);
 });

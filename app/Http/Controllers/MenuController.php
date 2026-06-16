@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Cloudinary\Configuration\Configuration;
+use Cloudinary\Api\Upload\UploadApi;
 
 class MenuController extends Controller
 {
@@ -38,17 +41,21 @@ class MenuController extends Controller
             'harga'       => 'required|numeric|min:0',
             'stok'        => 'required|integer|min:0',
             'deskripsi'   => 'nullable|string',
-            'gambar_url'  => 'nullable|string',
+            'gambar'      => 'nullable|image|max:2048',
         ]);
 
+        $data = $request->except(['gambar']);
+
         // Handle image upload
-        if ($request->hasFile('gambar')) {
-            $filename = time() . '.' . $request->gambar->extension();
-            $request->gambar->move(public_path('images'), $filename);
-            $request->merge(['gambar_url' => $filename]);
+        if ($request->hasFile('gambar') && $request->file('gambar')->isValid()) {
+            Configuration::instance(env('CLOUDINARY_URL'));
+            $upload = (new UploadApi())->upload($request->file('gambar')->getRealPath(), [
+                'folder' => 'sikantin_menus'
+            ]);
+            $data['gambar_url'] = $upload['secure_url'];
         }
 
-        $menu = Menu::create($request->all());
+        $menu = Menu::create($data);
 
         return redirect('/menus')->with('success', 'Menu berhasil ditambahkan!');
     }
@@ -86,17 +93,21 @@ class MenuController extends Controller
             'harga'       => 'sometimes|numeric|min:0',
             'stok'        => 'sometimes|integer|min:0',
             'deskripsi'   => 'nullable|string',
-            'gambar_url'  => 'nullable|string',
+            'gambar'      => 'nullable|image|max:2048',
         ]);
 
+        $data = $request->except(['gambar']);
+
         // Handle image upload
-        if ($request->hasFile('gambar')) {
-            $filename = time() . '.' . $request->gambar->extension();
-            $request->gambar->move(public_path('images'), $filename);
-            $request->merge(['gambar_url' => $filename]);
+        if ($request->hasFile('gambar') && $request->file('gambar')->isValid()) {
+            Configuration::instance(env('CLOUDINARY_URL'));
+            $upload = (new UploadApi())->upload($request->file('gambar')->getRealPath(), [
+                'folder' => 'sikantin_menus'
+            ]);
+            $data['gambar_url'] = $upload['secure_url'];
         }
 
-        $menu->update($request->all());
+        $menu->update($data);
 
         return redirect('/menus')->with('success', 'Menu berhasil diupdate!');
     }
@@ -108,6 +119,11 @@ class MenuController extends Controller
 
         if (!$menu) {
             return redirect('/menus')->with('error', 'Menu tidak ditemukan');
+        }
+
+        $hasOrders = \App\Models\OrderItem::where('menu_id', $menu->id)->exists();
+        if ($hasOrders) {
+            return redirect('/menus')->with('error', 'Menu tidak bisa dihapus karena sudah ada dalam riwayat pesanan. Ubah stok menjadi 0 jika tidak ingin dijual.');
         }
 
         $menu->delete();

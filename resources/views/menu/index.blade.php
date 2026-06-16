@@ -61,7 +61,7 @@
                     <td>
                         <div class="d-flex align-items-center gap-3">
                             @if($menu->gambar_url)
-                                <img src="{{ asset('images/' . $menu->gambar_url) }}"
+                                <img src="{{ filter_var($menu->gambar_url, FILTER_VALIDATE_URL) ? $menu->gambar_url : asset('images/' . $menu->gambar_url) }}"
                                      alt="{{ $menu->nama_menu }}"
                                      style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
                             @else

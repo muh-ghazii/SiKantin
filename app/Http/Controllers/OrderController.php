@@ -106,7 +106,7 @@ class OrderController extends Controller
     // PUT /orders/{id}/status
     public function updateStatus(Request $request, $id)
     {
-        $order = Order::find($id);
+        $order = Order::with('orderItems.menu')->find($id);
 
         if (!$order) {
             return redirect()->back()->with('error', 'Pesanan tidak ditemukan');
@@ -116,7 +116,16 @@ class OrderController extends Controller
             'status' => 'required|in:pending,proses,selesai,dibatalkan',
         ]);
 
+        $oldStatus = $order->status;
         $order->update(['status' => $request->status]);
+
+        if ($request->status === 'dibatalkan' && $oldStatus !== 'dibatalkan') {
+            foreach ($order->orderItems as $item) {
+                if ($item->menu) {
+                    $item->menu->increment('stok', $item->jumlah);
+                }
+            }
+        }
 
         return redirect()->back()->with('success', 'Status pesanan berhasil diupdate!');
     }

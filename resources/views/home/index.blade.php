@@ -53,7 +53,7 @@
 
             <div style="height:160px; overflow:hidden; border-radius:10px 10px 0 0;">
                 @if($menu->gambar_url)
-                    <img src="{{ asset('images/' . $menu->gambar_url) }}"
+                    <img src="{{ filter_var($menu->gambar_url, FILTER_VALIDATE_URL) ? $menu->gambar_url : asset('images/' . $menu->gambar_url) }}"
                          alt="{{ $menu->nama_menu }}"
                          style="width:100%; height:100%; object-fit:cover;">
                 @else

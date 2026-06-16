@@ -71,8 +71,8 @@
                         <div class="col-12">
                             <label class="form-label">Gambar Menu</label>
                             @if($menu->gambar_url)
-                                <div class="mb-2">
-                                    <img src="{{ asset('images/' . $menu->gambar_url) }}"
+                                <div class="mb-3">
+                                    <img src="{{ filter_var($menu->gambar_url, FILTER_VALIDATE_URL) ? $menu->gambar_url : asset('images/' . $menu->gambar_url) }}"
                                          id="imagePreview"
                                          style="width:120px; height:120px; object-fit:cover; border-radius:8px; border:1px solid #e2e8f0;">
                                 </div>
