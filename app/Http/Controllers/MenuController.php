@@ -8,9 +8,21 @@ use Illuminate\Http\Request;
 class MenuController extends Controller
 {
     // GET /menus
-    public function index()
+    public function index(Request $request)
     {
-        $menus = Menu::with('category')->get();
+        $query = Menu::with('category');
+
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_menu', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('category_id') && $request->category_id != '') {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $perPage = $request->get('per_page', 10);
+        $menus = $query->paginate($perPage);
+
         return response()->json([
             'status' => 'success',
             'data'   => $menus

@@ -12,17 +12,18 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
     // GET /orders
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $perPage = $request->get('per_page', 10);
 
         // Admin lihat semua, pelanggan hanya miliknya
         if ($user->role === 'admin') {
-            $orders = Order::with(['user', 'orderItems.menu'])->get();
+            $orders = Order::with(['user', 'orderItems.menu'])->paginate($perPage);
         } else {
             $orders = Order::with(['orderItems.menu'])
                 ->where('user_id', $user->id)
-                ->get();
+                ->paginate($perPage);
         }
 
         return response()->json([

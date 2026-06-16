@@ -224,13 +224,13 @@ SiKantin/
 - [x] API Dashboard (statistik)
 
 #### 📝 Yang Masih Perlu Dikerjakan:
-- [ ] Upload gambar menu
-- [ ] API profile user (lihat & edit profil)
-- [ ] Fix logout (hapus token dari database)
-- [ ] Filter & search menu berdasarkan nama/kategori
-- [ ] Pagination untuk daftar menu dan pesanan
-- [ ] Route web untuk menghubungkan ke views frontend
-- [ ] Integrasi frontend + backend saat fase merge
+- [x] Upload gambar menu
+- [x] API profile user (lihat & edit profil)
+- [x] Fix logout (hapus token dari database)
+- [x] Filter & search menu berdasarkan nama/kategori
+- [x] Pagination untuk daftar menu dan pesanan
+- [x] Route web untuk menghubungkan ke views frontend
+- [x] Integrasi frontend + backend saat fase merge
 
 #### 📌 Cara Kerja:
 ```bash
@@ -254,29 +254,29 @@ git push origin backend
 #### 📝 Semua Yang Harus Dikerjakan:
 
 **1. Setup Layout Utama**
-- [ ] Buat `resources/views/layouts/app.blade.php` — template utama dengan navbar dan sidebar
-- [ ] Buat `resources/views/layouts/guest.blade.php` — template untuk halaman login/register
-- [ ] Install Bootstrap 5 (via CDN di layout)
+- [x] Buat `resources/views/layouts/app.blade.php` — template utama dengan navbar dan sidebar
+- [x] Buat `resources/views/layouts/guest.blade.php` — template untuk halaman login/register
+- [x] Install Bootstrap 5 (via CDN di layout)
 
 **2. Halaman Auth**
-- [ ] `resources/views/auth/login.blade.php` — form login (email + password)
-- [ ] `resources/views/auth/register.blade.php` — form register (nama + email + password)
+- [x] `resources/views/auth/login.blade.php` — form login (email + password)
+- [x] `resources/views/auth/register.blade.php` — form register (nama + email + password)
 
 **3. Halaman Admin**
-- [ ] `resources/views/dashboard/index.blade.php` — dashboard statistik (total pesanan, pendapatan, menu terlaris)
-- [ ] `resources/views/category/index.blade.php` — daftar kategori + tombol tambah/edit/hapus
-- [ ] `resources/views/category/create.blade.php` — form tambah kategori
-- [ ] `resources/views/category/edit.blade.php` — form edit kategori
-- [ ] `resources/views/menu/index.blade.php` — daftar menu dengan gambar + harga
-- [ ] `resources/views/menu/create.blade.php` — form tambah menu (dengan upload gambar)
-- [ ] `resources/views/menu/edit.blade.php` — form edit menu
-- [ ] `resources/views/orders/index.blade.php` — daftar semua pesanan (admin)
-- [ ] `resources/views/orders/show.blade.php` — detail pesanan + tombol update status
+- [x] `resources/views/dashboard/index.blade.php` — dashboard statistik (total pesanan, pendapatan, menu terlaris)
+- [x] `resources/views/category/index.blade.php` — daftar kategori + tombol tambah/edit/hapus
+- [x] `resources/views/category/create.blade.php` — form tambah kategori
+- [x] `resources/views/category/edit.blade.php` — form edit kategori
+- [x] `resources/views/menu/index.blade.php` — daftar menu dengan gambar + harga
+- [x] `resources/views/menu/create.blade.php` — form tambah menu (dengan upload gambar)
+- [x] `resources/views/menu/edit.blade.php` — form edit menu
+- [x] `resources/views/orders/index.blade.php` — daftar semua pesanan (admin)
+- [x] `resources/views/orders/show.blade.php` — detail pesanan + tombol update status
 
 **4. Halaman Pelanggan**
-- [ ] `resources/views/home/index.blade.php` — halaman utama daftar menu berdasarkan kategori
-- [ ] `resources/views/orders/create.blade.php` — form buat pesanan (pilih menu + jumlah)
-- [ ] `resources/views/orders/history.blade.php` — riwayat pesanan pelanggan
+- [x] `resources/views/home/index.blade.php` — halaman utama daftar menu berdasarkan kategori
+- [x] `resources/views/orders/create.blade.php` — form buat pesanan (pilih menu + jumlah)
+- [x] `resources/views/orders/history.blade.php` — riwayat pesanan pelanggan
 
 #### 📌 Cara Kerja:
 ```bash
@@ -342,22 +342,22 @@ Membuat form:
 #### 📝 Yang Masih Perlu Dikerjakan:
 
 **1. Tambah Seeder Data Lengkap**
-- [ ] Tambah minimal 10 data menu yang realistis di `MenuSeeder.php`
-- [ ] Tambah data kategori yang lengkap di `CategorySeeder.php`
-- [ ] Buat `OrderSeeder.php` — data pesanan contoh untuk testing
+- [x] Tambah minimal 10 data menu yang realistis di `MenuSeeder.php`
+- [x] Tambah data kategori yang lengkap di `CategorySeeder.php`
+- [x] Buat `OrderSeeder.php` — data pesanan contoh untuk testing
 
 **2. Buat File SQL Backup**
-- [ ] Export struktur database ke file `database/sikantin.sql`
-- [ ] File ini digunakan sebagai backup dan dokumentasi
+- [x] Export struktur database ke file `database/sikantin.sql`
+- [x] File ini digunakan sebagai backup dan dokumentasi
 
 **3. Optimasi Database**
-- [ ] Cek semua foreign key sudah benar
-- [ ] Pastikan index pada kolom yang sering dicari (email, status)
-- [ ] Dokumentasi ERD final (bisa pakai draw.io atau dbdiagram.io)
+- [x] Cek semua foreign key sudah benar
+- [x] Pastikan index pada kolom yang sering dicari (email, status)
+- [x] Dokumentasi ERD final (sudah tersedia di `database/ERD.md`)
 
 **4. Update Migration jika Ada Perubahan**
-- [ ] Kalau ada kolom yang perlu ditambah, buat migration baru
-- [ ] Jangan edit migration yang sudah ada!
+- [x] Kalau ada kolom yang perlu ditambah, buat migration baru
+- [x] Jangan edit migration yang sudah ada!
 
 #### 📌 Cara Kerja:
 ```bash

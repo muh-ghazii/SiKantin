@@ -10,8 +10,6 @@ use App\Http\Controllers\DashboardController;
 // ===== AUTH (public) =====
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/me', [AuthController::class, 'me']);
 
 // ===== MENU & CATEGORY (public) =====
 Route::get('/menus', [MenuController::class, 'index']);
@@ -21,6 +19,10 @@ Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
 // ===== ROUTES YANG BUTUH LOGIN =====
 Route::middleware('auth:sanctum')->group(function () {
+    // Auth actions
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/me', [AuthController::class, 'updateProfile']);
 
     // Semua user yang login
     Route::get('/orders', [OrderController::class, 'index']);

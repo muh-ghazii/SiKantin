@@ -66,9 +66,9 @@ class AuthController extends Controller
     // POST /logout
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        if ($request->user() && $request->user()->currentAccessToken()) {
+            $request->user()->currentAccessToken()->delete();
+        }
 
         return response()->json([
             'status'  => 'success',
@@ -84,6 +84,36 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'data'   => $user
+        ]);
+    }
+
+    // PUT /me
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'nama'  => 'sometimes|string|max:100',
+            'email' => 'sometimes|email|unique:users,email,' . $user->id,
+            'password' => 'sometimes|min:6',
+        ]);
+
+        if ($request->has('nama')) {
+            $user->nama = $request->nama;
+        }
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+        if ($request->has('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Profil berhasil diupdate',
+            'data'    => $user
         ]);
     }
 }
