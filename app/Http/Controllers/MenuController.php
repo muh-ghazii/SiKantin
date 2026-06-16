@@ -29,13 +29,16 @@ class MenuController extends Controller
             'gambar_url'  => 'nullable|string',
         ]);
 
+        // Handle image upload
+        if ($request->hasFile('gambar')) {
+            $filename = time() . '.' . $request->gambar->extension();
+            $request->gambar->move(public_path('images'), $filename);
+            $request->merge(['gambar_url' => $filename]);
+        }
+
         $menu = Menu::create($request->all());
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Menu berhasil ditambahkan',
-            'data'    => $menu
-        ], 201);
+        return redirect('/menus')->with('success', 'Menu berhasil ditambahkan!');
     }
 
     // GET /menus/{id}
@@ -62,10 +65,7 @@ class MenuController extends Controller
         $menu = Menu::find($id);
 
         if (!$menu) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Menu tidak ditemukan'
-            ], 404);
+            return redirect('/menus')->with('error', 'Menu tidak ditemukan');
         }
 
         $request->validate([
@@ -77,13 +77,16 @@ class MenuController extends Controller
             'gambar_url'  => 'nullable|string',
         ]);
 
+        // Handle image upload
+        if ($request->hasFile('gambar')) {
+            $filename = time() . '.' . $request->gambar->extension();
+            $request->gambar->move(public_path('images'), $filename);
+            $request->merge(['gambar_url' => $filename]);
+        }
+
         $menu->update($request->all());
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Menu berhasil diupdate',
-            'data'    => $menu
-        ]);
+        return redirect('/menus')->with('success', 'Menu berhasil diupdate!');
     }
 
     // DELETE /menus/{id}
@@ -92,17 +95,11 @@ class MenuController extends Controller
         $menu = Menu::find($id);
 
         if (!$menu) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Menu tidak ditemukan'
-            ], 404);
+            return redirect('/menus')->with('error', 'Menu tidak ditemukan');
         }
 
         $menu->delete();
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Menu berhasil dihapus'
-        ]);
+        return redirect('/menus')->with('success', 'Menu berhasil dihapus!');
     }
 }

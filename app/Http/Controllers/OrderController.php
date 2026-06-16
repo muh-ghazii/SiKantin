@@ -49,10 +49,8 @@ class OrderController extends Controller
                 $menu = Menu::find($item['menu_id']);
 
                 if ($menu->stok < $item['jumlah']) {
-                    return response()->json([
-                        'status'  => 'error',
-                        'message' => "Stok {$menu->nama_menu} tidak mencukupi"
-                    ], 400);
+                    DB::rollBack();
+                    return redirect()->back()->with('error', "Stok {$menu->nama_menu} tidak mencukupi");
                 }
 
                 $subtotal     = $menu->harga * $item['jumlah'];
@@ -77,18 +75,12 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Pesanan berhasil dibuat',
-                'data'    => $order->load('orderItems.menu')
-            ], 201);
+            session()->forget('cart');
+            return redirect('/orders/history')->with('success', 'Pesanan berhasil dibuat!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Pesanan gagal dibuat: ' . $e->getMessage()
-            ], 500);
+            return redirect()->back()->with('error', 'Pesanan gagal dibuat: ' . $e->getMessage());
         }
     }
 
@@ -116,10 +108,7 @@ class OrderController extends Controller
         $order = Order::find($id);
 
         if (!$order) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Pesanan tidak ditemukan'
-            ], 404);
+            return redirect()->back()->with('error', 'Pesanan tidak ditemukan');
         }
 
         $request->validate([
@@ -128,10 +117,6 @@ class OrderController extends Controller
 
         $order->update(['status' => $request->status]);
 
-        return response()->json([
-            'status'  => 'success',
-            'message' => 'Status pesanan berhasil diupdate',
-            'data'    => $order
-        ]);
+        return redirect()->back()->with('success', 'Status pesanan berhasil diupdate!');
     }
 }
