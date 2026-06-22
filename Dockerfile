@@ -19,6 +19,4 @@ RUN a2enmod rewrite
 
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-EXPOSE 80
-
-CMD php artisan config:cache && php artisan migrate --force && apache2-foreground
+CMD ["sh", "-c", "php artisan config:cache && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
