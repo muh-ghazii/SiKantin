@@ -4,7 +4,7 @@ SiKantin adalah aplikasi berbasis web yang dirancang untuk memudahkan proses pem
 
 ---
 
-## ✨ Fitur Aplikasi
+## Fitur Aplikasi
 
 ### Role Admin
 - **Dashboard Statistik**: Memantau total pesanan, pendapatan, menu terlaris, dan pelanggan baru.
@@ -20,7 +20,7 @@ SiKantin adalah aplikasi berbasis web yang dirancang untuk memudahkan proses pem
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 Aplikasi ini dibangun menggunakan *tech stack* modern, dengan detail sebagai berikut:
 
@@ -36,7 +36,7 @@ Aplikasi ini dibangun menggunakan *tech stack* modern, dengan detail sebagai ber
 
 ---
 
-## 🏗️ Arsitektur Aplikasi & Struktur Folder
+## Arsitektur Aplikasi & Struktur Folder
 
 Aplikasi ini menerapkan pola arsitektur **MVC (Model-View-Controller)** bawaan dari framework Laravel, dengan pemisahan tanggung jawab yang jelas:
 - **Model**: Bertanggung jawab merepresentasikan struktur tabel database dan mengatur relasi antar entitas.
@@ -64,7 +64,7 @@ SiKantin/
 
 ---
 
-## 🗄️ Entity Relationship Diagram (ERD)
+## Entity Relationship Diagram (ERD)
 
 Struktur tabel dalam database `sikantin` dirancang saling berelasi untuk mendukung integritas data pemesanan.
 
@@ -127,7 +127,7 @@ erDiagram
 
 ---
 
-## 🚀 Cara Menjalankan Project (Local Setup)
+## Cara Menjalankan Project (Local Setup)
 
 Untuk menjalankan aplikasi ini di environment lokal Anda, ikuti langkah-langkah berikut:
 
@@ -166,13 +166,9 @@ Untuk menjalankan aplikasi ini di environment lokal Anda, ikuti langkah-langkah 
    ```
    Aplikasi dapat diakses melalui browser pada alamat `http://127.0.0.1:8000`.
 
-### 🔑 Akun Testing Default
-- **Admin**: `admin@sikantin.com` | Password: `password123`
-- **Pelanggan**: `pelanggan@sikantin.com` | Password: `password123`
-
 ---
 
-## 📡 API Documentation
+## API Documentation
 
 Selain via Web Interface, SiKantin menyediakan endpoint REST API bagi aplikasi pihak ketiga atau *client frontend* yang terpisah. 
 
@@ -180,10 +176,10 @@ Beberapa endpoint API yang tersedia (Base URL: `/api`):
 
 | Method | Endpoint | Keterangan | Auth |
 |---|---|---|---|
-| `POST` | `/login` | Otentikasi dan mengambil bearer token (Sanctum) | ❌ |
-| `GET` | `/menus` | Menampilkan seluruh daftar menu yang ada | ❌ |
-| `POST` | `/orders` | Membuat pesanan baru | ✅ (Pelanggan) |
-| `GET` | `/orders` | Melihat daftar pesanan | ✅ (User terkait) |
-| `GET` | `/dashboard`| Melihat summary dan statistik penjualan | ✅ (Admin) |
+| `POST` | `/login` | Otentikasi dan mengambil bearer token (Sanctum) | Tidak |
+| `GET` | `/menus` | Menampilkan seluruh daftar menu yang ada | Ya (Semua User) |
+| `POST` | `/orders` | Membuat pesanan baru | Ya (Pelanggan) |
+| `GET` | `/orders` | Melihat daftar pesanan | Ya (User terkait) |
+| `GET` | `/dashboard`| Melihat summary dan statistik penjualan | Ya (Admin) |
 
 Untuk endpoint yang membutuhkan autentikasi, sertakan `Authorization: Bearer <token>` di HTTP Header.
