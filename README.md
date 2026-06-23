@@ -1,58 +1,189 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🍽️ SiKantin — Sistem Informasi Pemesanan Kantin
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+SiKantin adalah aplikasi berbasis web yang dirancang untuk memudahkan proses pemesanan makanan dan minuman di kantin. Aplikasi ini memiliki dua peran utama: **Admin** untuk mengelola menu dan pesanan, serta **Pelanggan** untuk melihat menu dan melakukan pemesanan.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ✨ Fitur Aplikasi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Role Admin
+- **Dashboard Statistik**: Memantau total pesanan, pendapatan, menu terlaris, dan pelanggan baru.
+- **Manajemen Kategori**: Menambah, mengedit, dan menghapus kategori menu (CRUD).
+- **Manajemen Menu**: Mengelola daftar menu beserta detail harga, stok, dan upload gambar.
+- **Manajemen Pesanan**: Melihat seluruh riwayat pesanan yang masuk dan memperbarui status pesanan dari pelanggan.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Role Pelanggan
+- **Autentikasi**: Register akun dan Login.
+- **Katalog Menu**: Melihat daftar menu makanan & minuman yang dikelompokkan berdasarkan kategori.
+- **Pemesanan**: Membuat pesanan baru berdasarkan menu yang tersedia.
+- **Riwayat & Status**: Memantau status pesanan secara real-time (pending, proses, selesai, dibatalkan) dan melihat riwayat transaksi sebelumnya.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Teknologi yang Digunakan
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Aplikasi ini dibangun menggunakan *tech stack* modern, dengan detail sebagai berikut:
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+| Komponen | Teknologi |
+|---|---|
+| **Backend Framework** | Laravel 13 |
+| **Database** | MySQL |
+| **Frontend Styling** | Tailwind CSS / Bootstrap 5 |
+| **Template Engine** | Laravel Blade |
+| **API Auth** | Laravel Sanctum |
+| **Image Storage** | Cloudinary (via SDK) |
+| **Asset Bundler** | Vite |
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 🏗️ Arsitektur Aplikasi & Struktur Folder
 
-```bash
-composer require laravel/boost --dev
+Aplikasi ini menerapkan pola arsitektur **MVC (Model-View-Controller)** bawaan dari framework Laravel, dengan pemisahan tanggung jawab yang jelas:
+- **Model**: Bertanggung jawab merepresentasikan struktur tabel database dan mengatur relasi antar entitas.
+- **View**: Menampilkan antarmuka pengguna (UI) kepada *end-user* menggunakan Laravel Blade.
+- **Controller**: Menangani logika bisnis utama, memproses *request* dari pengguna, dan memberikan *response* kembali (HTML untuk web, JSON untuk API).
 
-php artisan boost:install
+**Struktur Direktori Utama:**
+```text
+SiKantin/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/          ← Menampung logic bisnis (Controller Web & API)
+│   │   └── Middleware/           ← Pengecekan role (Admin/Pelanggan) dan Autentikasi
+│   └── Models/                   ← Model Eloquent untuk berinteraksi dengan database
+├── database/
+│   ├── migrations/               ← Skema tabel database (DDL)
+│   └── seeders/                  ← Data default awal (kategori, menu, akun testing)
+├── resources/
+│   └── views/                    ← Berisi file-file Blade template untuk UI
+├── public/                       ← Tempat penyimpanan aset statis yang dapat diakses publik (CSS, JS, Gambar)
+└── routes/
+    ├── api.php                   ← Mendefinisikan rute/endpoint REST API
+    └── web.php                   ← Mendefinisikan rute untuk halaman web
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## 🗄️ Entity Relationship Diagram (ERD)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Struktur tabel dalam database `sikantin` dirancang saling berelasi untuk mendukung integritas data pemesanan.
 
-## Code of Conduct
+```mermaid
+erDiagram
+    USERS {
+        bigint id PK
+        string nama
+        string email
+        string password
+        string role "admin / pelanggan"
+        timestamp created_at
+        timestamp updated_at
+    }
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    CATEGORIES {
+        bigint id PK
+        string nama_kategori
+        timestamp created_at
+        timestamp updated_at
+    }
 
-## Security Vulnerabilities
+    MENUS {
+        bigint id PK
+        bigint category_id FK
+        string nama_menu
+        text deskripsi
+        integer harga
+        integer stok
+        string gambar_url
+        timestamp created_at
+        timestamp updated_at
+    }
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    ORDERS {
+        bigint id PK
+        bigint user_id FK
+        integer total_harga
+        string status "pending / proses / selesai / dibatalkan"
+        timestamp created_at
+        timestamp updated_at
+    }
 
-## License
+    ORDER_ITEMS {
+        bigint id PK
+        bigint order_id FK
+        bigint menu_id FK
+        integer jumlah
+        integer subtotal
+        timestamp created_at
+        timestamp updated_at
+    }
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    %% Relationships
+    CATEGORIES ||--o{ MENUS : "memiliki"
+    USERS ||--o{ ORDERS : "melakukan"
+    ORDERS ||--|{ ORDER_ITEMS : "terdiri dari"
+    MENUS ||--o{ ORDER_ITEMS : "dipesan dalam"
+```
+
+---
+
+## 🚀 Cara Menjalankan Project (Local Setup)
+
+Untuk menjalankan aplikasi ini di environment lokal Anda, ikuti langkah-langkah berikut:
+
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/muh-ghazii/SiKantin.git
+   cd SiKantin
+   ```
+
+2. **Install Dependencies**
+   Jalankan perintah berikut untuk mengunduh package PHP dan Node.js yang dibutuhkan.
+   ```bash
+   composer install
+   npm install
+   ```
+
+3. **Setup Environment**
+   Salin file konfigurasi *environment* dan hasilkan *application key* baru.
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
+   *Buka file `.env` dan pastikan kredensial database sudah sesuai dengan server MySQL lokal Anda (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, dan `DB_PORT`).*
+
+4. **Jalankan Migrasi & Seeder Database**
+   Perintah ini akan membuat semua tabel yang dibutuhkan dan mengisi database dengan data *dummy*.
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+
+5. **Jalankan Development Server**
+   Jalankan server PHP dan Vite secara bersamaan.
+   ```bash
+   php artisan serve
+   npm run dev
+   ```
+   Aplikasi dapat diakses melalui browser pada alamat `http://127.0.0.1:8000`.
+
+### 🔑 Akun Testing Default
+- **Admin**: `admin@sikantin.com` | Password: `password123`
+- **Pelanggan**: `pelanggan@sikantin.com` | Password: `password123`
+
+---
+
+## 📡 API Documentation
+
+Selain via Web Interface, SiKantin menyediakan endpoint REST API bagi aplikasi pihak ketiga atau *client frontend* yang terpisah. 
+
+Beberapa endpoint API yang tersedia (Base URL: `/api`):
+
+| Method | Endpoint | Keterangan | Auth |
+|---|---|---|---|
+| `POST` | `/login` | Otentikasi dan mengambil bearer token (Sanctum) | ❌ |
+| `GET` | `/menus` | Menampilkan seluruh daftar menu yang ada | ❌ |
+| `POST` | `/orders` | Membuat pesanan baru | ✅ (Pelanggan) |
+| `GET` | `/orders` | Melihat daftar pesanan | ✅ (User terkait) |
+| `GET` | `/dashboard`| Melihat summary dan statistik penjualan | ✅ (Admin) |
+
+Untuk endpoint yang membutuhkan autentikasi, sertakan `Authorization: Bearer <token>` di HTTP Header.
